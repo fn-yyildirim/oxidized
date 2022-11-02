@@ -3,9 +3,15 @@ FROM phusion/baseimage:focal-1.2.0
 
 # set up dependencies for the build process
 RUN apt-get -yq update \
-    && apt-get -yq --no-install-recommends install ruby ruby-dev libssl1.1 libssl-dev pkg-config make cmake libssh2-1 libssh2-1-dev git git-email libmailtools-perl g++ libffi-dev ruby-bundler libicu66 libicu-dev libsqlite3-0 libsqlite3-dev libmysqlclient21 libmysqlclient-dev libpq5 libpq-dev zlib1g-dev \
+    && apt-get -yq --no-install-recommends install ruby ruby-dev libssl1.1 libssl-dev pkg-config make cmake libssh2-1 libssh2-1-dev git git-email libmailtools-perl g++ libffi-dev ruby-bundler libicu66 libicu-dev libsqlite3-0 libsqlite3-dev libmysqlclient21 libmysqlclient-dev libpq5 libpq-dev zlib1g-dev wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# set up dependencies for zabbix integration
+RUN wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_all.deb \
+    && dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb \
+    && apt-get -yq update \
+    && apt-get -yq install zabbix-sender
 
 # dependencies for hooks
 RUN gem install aws-sdk slack-ruby-client xmpp4r cisco_spark --no-document
